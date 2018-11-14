@@ -1,0 +1,126 @@
+﻿body {
+}
+
+
+
+#controller {
+    overflow: hidden;
+    padding: 15px 0px 20px 0px;
+    position: fixed;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: cornflowerblue;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+
+
+#controllerDownload {
+    padding: 0px 20px;
+}
+
+#controllerShow {
+    padding: 0px 20px;
+}
+
+#spanSelectTeam, #spanStatInd, #spanSelectWeek {
+    margin: 0px 5px;
+}
+
+#exempleClassement {
+    display: none;
+}
+
+.textAlignLeft{
+    text-align:left;
+}
+.textAlignCenter {
+    text-align: center;
+}
+
+#Matches {
+    margin-top: 60px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    text-align: center;
+}
+#Matches > * {
+    flex: 1 0 auto;
+    text-align: center;
+}
+
+.MatchButton {
+    display: block;
+    text-align: center;
+    margin: auto;
+}
+
+.OrangeButton{
+    color: orange;
+}
+
+.RedButton{
+    color: red;
+}
+
+.GreenButton{
+    color: green;
+}
+
+
+.displayNone{
+    display: none;
+}
+
+.flexContainer {
+    width: 100%;
+    
+}
+
+.flexContainer > span {
+	text-align: center;
+	
+	width: 25%;
+    display: inline-block;
+}
+
+#md_Title{
+    font-weight: bold;
+    text-decoration: underline;
+    font-size: 1.25em;
+}
+
+.underline {
+    text-decoration: underline;
+} 
+.bold {
+    font-weight: bold;
+}
+
+.colSize1 {
+    width: 40px;
+}
+.colSize2 {
+    width: 60px;
+}
+.colSize3 {
+    width: 200px;
+}
+
+.mdTable {
+    margin: 5px;
+    padding: 3px;
+    border: 2px solid;
+    text-align: center;
+}
+
+td, th {
+    border: 2px inset;
+}
+
+.textLeft {
+    text-align: left;
+}

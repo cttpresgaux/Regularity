@@ -1,0 +1,126 @@
+﻿<!doctype html>
+
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+
+    <title>N115 - Regularité</title>
+    <meta name="description" content="N115 - Regularité">
+    <meta name="author" content="Emeric Beauchot">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/css-loader.css">
+
+</head>
+
+<body onload="FirstInit()">
+    <div id="controller">
+
+    </div>
+    <div id="loader" class="loader loader-default is-active" data-text data-blink></div>
+    <div id="Matches"></div>
+
+    <dialog id="MatchesDetails">
+      <form method="dialog">
+        <section>
+            <p id="md_Title"></p>
+            <table class="mdTable">
+                <colgroup>
+                    <col class="colSize1">
+                    <col class="colSize3">
+                    <col class="colSize1">
+                    <col class="colSize1">
+                    <col class="colSize1">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <td id="md_HT" colspan="3"></td>
+                        <td id="md_HTScore" colspan="2"></td>
+                    </tr>
+                    <tr id="md_HPlayer1">
+                        <td id="md_HPlayer1Order">1</td>
+                        <td id="md_HPlayer1Name" class="textLeft"></td>
+                        <td id="md_HPlayer1Ranking"></td>
+                        <td id="md_HPlayer1Victory"></td>
+                        <td ><input type="checkbox" id="md_HPlayer1Ignore"></td>
+                    </tr>
+                    <tr id="md_HPlayer2">
+                        <td id="md_HPlayer2Order">2</td>
+                        <td id="md_HPlayer2Name" class="textLeft"></td>
+                        <td id="md_HPlayer2Ranking"></td>
+                        <td id="md_HPlayer2Victory"></td>
+                        <td ><input type="checkbox" id="md_HPlayer2Ignore"></td>
+                    </tr>
+                    <tr id="md_HPlayer3">
+                        <td id="md_HPlayer3Order">3</td>
+                        <td id="md_HPlayer3Name" class="textLeft"></td>
+                        <td id="md_HPlayer3Ranking"></td>
+                        <td id="md_HPlayer3Victory"></td>
+                        <td ><input type="checkbox" id="md_HPlayer3Ignore"></td>
+                    </tr>
+                    <tr id="md_HPlayer4">
+                        <td id="md_HPlayer4Order">4</td>
+                        <td id="md_HPlayer4Name" class="textLeft"></td>
+                        <td id="md_HPlayer4Ranking"></td>
+                        <td id="md_HPlayer4Victory"></td>
+                        <td ><input type="checkbox" id="md_HPlayer4Ignore"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="mdTable">
+                <colgroup>
+                    <col class="colSize1">
+                    <col class="colSize3">
+                    <col class="colSize1">
+                    <col class="colSize1">
+                    <col class="colSize1">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <td id="md_AT" colspan="3"></td>
+                        <td id="md_ATScore" colspan="2"></td>
+                    </tr>
+                    <tr id="md_APlayer1">
+                        <td id="md_APlayer1Order">1</td>
+                        <td id="md_APlayer1Name" class="textLeft"></td>
+                        <td id="md_APlayer1Ranking"></td>
+                        <td id="md_APlayer1Victory"></td>
+                        <td ><input type="checkbox" id="md_APlayer1Ignore"></td>
+                    </tr>
+                    <tr id="md_APlayer2">
+                        <td id="md_APlayer2Order">2</td>
+                        <td id="md_APlayer2Name" class="textLeft"></td>
+                        <td id="md_APlayer2Ranking"></td>
+                        <td id="md_APlayer2Victory"></td>
+                        <td ><input type="checkbox" id="md_APlayer2Ignore"></td>
+                    </tr>
+                    <tr id="md_APlayer3">
+                        <td id="md_APlayer3Order">3</td>
+                        <td id="md_APlayer3Name" class="textLeft"></td>
+                        <td id="md_APlayer3Ranking"></td>
+                        <td id="md_APlayer3Victory"></td>
+                        <td ><input type="checkbox" id="md_APlayer3Ignore"></td>
+                    </tr>
+                    <tr id="md_APlayer4">
+                        <td id="md_APlayer4Order">4</td>
+                        <td id="md_APlayer4Name" class="textLeft"></td>
+                        <td id="md_APlayer4Ranking"></td>
+                        <td id="md_APlayer4Victory"></td>
+                        <td ><input type="checkbox" id="md_APlayer4Ignore"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+        <menu>
+          <button onclick= closeMatchDialog()>Annuler</button>
+          <button onclick= saveMatchDialog()>Confirmer</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <script src="js/html2pdf.bundle.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
