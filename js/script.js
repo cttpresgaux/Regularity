@@ -6,6 +6,10 @@ var rankingValue = ["NC", "E6", "E4", "E2", "E0", "D6", "D4", "D2", "D0", "C6", 
 var Week = new Array(23);
 var Teams = [];
 
+var LF_UniqueID = {};
+var LF_Players = []; 
+
+
 var NumTeam = 0;
 
 var MatchData = {};
@@ -36,13 +40,13 @@ function importMatchData(_Callback) {
     req.send();
 }
 
-function updateMatchData(_Callback) {
+function updateMatchData() {
     let req = new XMLHttpRequest();
 
     req.onreadystatechange = () => {
         if (req.readyState == XMLHttpRequest.DONE) {
             console.log(req.responseText);
-            _Callback();
+            
         }
     };
 
@@ -66,19 +70,20 @@ function Init() {
             var b = document.createElement("Button");
             b.id = m.MatchId;
             b.name = i + "_" + letters[i2];
-            if (m.DetailsCreated) {
+            if (m.IsAwayForfeited == "true" || m.IsHomeForfeited == "true") {
+                b.disabled = true;
+                b.className = "MatchButton";
+            }
+            else if (m.DetailsCreated) {
                 if (MatchData[m.MatchId] == null) {
                     b.className = "MatchButton OrangeButton";
                 } else {
                     b.className = "MatchButton GreenButton";
                 }
+                addResultToLF(m);
             } else {
                 b.disabled = true;
                 b.className = "MatchButton RedButton";
-            }
-            if (m.IsAwayForfeited == "true" || m.IsHomeForfeited == "true") {
-                b.disabled = true;
-                b.className = "MatchButton";
             }
             b.innerText = m.HomeTeam + " - " + m.AwayTeam;
             b.addEventListener('click', showMatchDialog);
@@ -89,8 +94,105 @@ function Init() {
         document.getElementById("Matches").appendChild(w);
     }
 
+    createSpreadSheet();
+
     hideLoader();
 };
+
+
+function addResultToLF(match) {
+    
+        var playersArray = null;
+        if (match.isHome) {
+            playersArray = match.HPs;
+        } else {
+            playersArray = match.APs;
+        }
+
+        for (var i = 1; i < playersArray.length; i++) {
+            var id = playersArray[i].UniqueIndex;
+            var p = LF_Players[LF_UniqueID[id]];
+
+
+            p.MatchPlayed = parseInt(p.MatchPlayed);
+            p.Victory = parseInt(p.Victory);
+            p.Defait = parseInt(p.Defait);
+            p.Counter = parseInt(p.Counter);
+            p.Perf = parseInt(p.Perf);
+            p.Points = parseInt(p.Points);
+            p.Pig = parseInt(p.Pig);
+
+
+            p.MatchPlayed++;
+            p.Victory += playersArray[i].won.length;
+            p.Defait += playersArray[i].lost.length;
+            p.VictoryPercent = ((p.Victory / (p.Victory + p.Defait))*100).toFixed(2);
+
+            var prv = rankingValue.indexOf(p.Ranking);
+            for (var j = 0; j < playersArray[i].lost.length; j++) {
+                var arv = rankingValue.indexOf(playersArray[i].lost[j]);
+                if (prv > arv) {
+                    p.Counter++;
+                    p.Pig += (prv-arv);
+                }
+            }
+             
+            for (var j = 0; j < playersArray[i].won.length; j++) {
+                var arv = rankingValue.indexOf(playersArray[i].won[j]);
+                if (prv < arv) {p.Perf++;}
+                p.Points += calculPtsReg(prv,arv);
+            }
+
+            p.AveragePoints = (p.Points / p.MatchPlayed).toFixed(2);
+
+            
+        }
+
+}
+
+
+function calculPtsReg(prv,arv) {
+    var pts = null;
+    if (prv <= arv) {pts = 3 + (arv-prv);}
+    else if (prv > arv + 3) {pts=1;}
+    else {pts=2;}
+    return pts;
+}
+
+
+function createSpreadSheet() {
+
+    var container = document.getElementById('SpreadSheet');
+    var hot = new Handsontable(container, {
+        data: LF_Players,
+        columnSorting: {
+            sortEmptyCells: true,
+            initialConfig: {
+              column: 12,
+              sortOrder: 'desc'
+            }
+        },
+        rowHeaders: true,
+        colHeaders: [
+            "LF",
+            "Index",
+            "UniqueID",
+            "FirstName",
+            "LastName",
+            "Class.",
+            "Aligné",
+            "Victoire",
+            "Defaite",
+            "Victoire (%)",
+            "Contre",
+            "Perf",
+            "Points",
+            "Moyenne Points",
+            "Cochon"
+          ]
+    });
+}
+
 
 function importMatches() {
     var xml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tab="http://api.frenoy.net/TabTAPI">'
@@ -105,7 +207,22 @@ function importMatches() {
             + '</soapenv:Envelope>'
 
 
-    soap(xml, setMatches, Init);
+    soap(xml, setMatches, importLF);
+}
+
+function importLF() {
+    var xml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tab="http://api.frenoy.net/TabTAPI">'
+            +   '<soapenv:Header/>'
+            +   '<soapenv:Body>'
+            +       '<tab:GetMembersRequest>'
+            +           '<tab:Club>N115</tab:Club>'
+            +           '<tab:WithDetails>yes</tab:WithDetails>'
+            +       '</tab:GetMembersRequest>'
+            +   '</soapenv:Body>'
+            + '</soapenv:Envelope>'
+
+
+    soap(xml, setLF, Init);
 }
 
 
@@ -212,6 +329,7 @@ function soap(strRequest, callback, _afterCallback) {
 
 
 function xmlToPlayer(nodeCollection) {
+    var UniqueIndex;
     var Position;
     var FirstName;
     var LastName;
@@ -221,6 +339,9 @@ function xmlToPlayer(nodeCollection) {
 
     for (var i = 0; i < nodeCollection.length; i++) {       
         switch (nodeCollection[i].localName) {
+            case "UniqueIndex":
+                UniqueIndex = nodeCollection[i].innerHTML;
+                break;
             case "Position":
                 Position = nodeCollection[i].innerHTML;
                 break;
@@ -246,6 +367,7 @@ function xmlToPlayer(nodeCollection) {
     }
 
     var p = {
+        UniqueIndex: UniqueIndex,
         position: Position,
         name: FirstName + "   " + LastName[0] + ".",
         ranking: Ranking,
@@ -259,7 +381,7 @@ function xmlToPlayer(nodeCollection) {
     return p;
 }
 
-function xmlToMatch(nodeCollection) {
+function xmlToMatch(nodeCollection, MatchId) {
     var Position;
     var HomePlayerMatchIndex;
     var AwayPlayerMatchIndex;
@@ -294,12 +416,18 @@ function xmlToMatch(nodeCollection) {
         }
     }
 
+    var wo = (IsHomeForfeited || IsAwayForfeited);
+    if (MatchData[MatchId] != null) {
+        var cancelMatch = (  MatchData[MatchId].HPs[HomePlayerMatchIndex] || MatchData[MatchId].APs[AwayPlayerMatchIndex] );
+        wo = wo || cancelMatch;
+    }
+
     var m = {
         position: Position,
         hpi: HomePlayerMatchIndex,
         api: AwayPlayerMatchIndex,
         homeWon: (HomeSetCount > AwaySetCount),
-        wo: (IsHomeForfeited || IsAwayForfeited)
+        wo: wo
     }
     return m;
 }
@@ -431,12 +559,13 @@ function setMatches(resp, callback) {
                         }
                         break;
                     case "IndividualMatchResults":
-                        var m = xmlToMatch(MatchDetails[i3].children);
+                        var m = xmlToMatch(MatchDetails[i3].children,MatchId);
                         Matchs[m.position] = m;
                         break;
                 }
             }
 
+            //ajout resultat individuel
             for (var i4 = 1; i4 < Matchs.length; i4++) {
                 var m = Matchs[i4];
                 if (!m.wo) {
@@ -478,4 +607,90 @@ function setMatches(resp, callback) {
 }
 
 
+function setLF(resp, callback) {
+    LF_UniqueID = {};
+    LF_Players = []; 
+    
+    var oParser = new DOMParser();
+    var oDOM = oParser.parseFromString(resp, "application/xml");
 
+    var players = oDOM.firstElementChild.firstElementChild.firstElementChild.children;
+    var nameSpace = players[0].namespaceURI;
+
+
+    for (i = 1; i < players.length; i++) {
+
+        var Position = null;
+        var UniqueIndex = null;
+        var RankingIndex = null;
+        var FirstName = null;
+        var LastName = null;
+        var Ranking = null;
+
+
+        for (var _i = 0; _i < players[i].children.length; _i++) {
+            switch (players[i].children[_i].localName) {
+                case "Position":
+                    Position = parseInt(players[i].children[_i].innerHTML);
+                    break;
+                case "UniqueIndex":
+                    UniqueIndex = parseInt(players[i].children[_i].innerHTML);;
+                    break;
+                case "RankingIndex":
+                    RankingIndex = parseInt(players[i].children[_i].innerHTML);;
+                    break;
+                case "FirstName":
+                    FirstName = players[i].children[_i].innerHTML;
+                    break;
+                case "LastName":
+                    LastName = players[i].children[_i].innerHTML;
+                    break;
+                case "Ranking":
+                    Ranking = players[i].children[_i].innerHTML;
+                    if (Ranking == "NG") {Ranking = "NC"};
+                    break;
+            }
+        }
+
+        
+        var player = {
+            "Position": Position,
+            "RankingIndex": RankingIndex,
+            "UniqueIndex": UniqueIndex,
+            "FirstName": FirstName,
+            "LastName": LastName,
+            "Ranking": Ranking,
+            "MatchPlayed": 0,
+            "Victory": 0,
+            "Defait": 0,
+            "VictoryPercent": "-",
+            "Counter": 0,
+            "Perf": 0,
+            "Points": 0,
+            "AveragePoints":0,
+            "Pig": 0
+        };
+        
+        LF_Players[Position - 1] = player;
+        LF_UniqueID[UniqueIndex] = Position - 1;
+
+
+    }
+
+    callback()
+}
+
+
+//Function Tabs
+
+function showTabRankings() {
+    document.getElementById("Rankings").className = "";
+    document.getElementById("Matches").className = "displayNone";
+    document.getElementById("btn_Data").className = "displayNone";
+}
+
+function showTabMatches() {
+    document.getElementById("Matches").className = "";
+    document.getElementById("btn_Data").className = "";
+    document.getElementById("Rankings").className = "displayNone";
+}

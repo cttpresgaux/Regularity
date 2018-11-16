@@ -17,11 +17,11 @@
 }
 
 
-#controllerDownload {
+#tabs {
     padding: 0px 20px;
 }
 
-#controllerShow {
+#btn_Data {
     padding: 0px 20px;
 }
 
@@ -40,6 +40,10 @@
     text-align: center;
 }
 
+#Rankings {
+    margin-top: 60px;
+}
+
 #Matches {
     margin-top: 60px;
     display: flex;
@@ -51,6 +55,14 @@
     flex: 1 0 auto;
     text-align: center;
 }
+
+#Rankings.displayNone,#Matches.displayNone{
+    display: none;
+}
+
+
+
+
 
 .MatchButton {
     display: block;
@@ -124,3 +136,6 @@ td, th {
 .textLeft {
     text-align: left;
 }
+
+
+/*Onglet*/

@@ -8,6 +8,7 @@
     <meta name="description" content="N115 - Regularité">
     <meta name="author" content="Emeric Beauchot">
 
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/handsontable-pro@latest/dist/handsontable.full.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/css-loader.css">
 
@@ -15,10 +16,20 @@
 
 <body onload="FirstInit()">
     <div id="controller">
-
+        <div id="tabs">
+            <button id="tab_Rankings" onclick="showTabRankings()">Classement</button>
+            <button id="tab_Matches" onclick="showTabMatches()">Data</button>
+        </div>
+        <div id="btn_Data" class="displayNone">
+            <button onclick="location.href=location.href">Update Classement</button>
+        </div>
     </div>
     <div id="loader" class="loader loader-default is-active" data-text data-blink></div>
-    <div id="Matches"></div>
+    
+    <div id="Rankings">
+        <div id="SpreadSheet"></div>
+    </div>
+    <div id="Matches" class="displayNone"></div>
 
     <dialog id="MatchesDetails">
       <form method="dialog">
@@ -114,12 +125,13 @@
 
         </section>
         <menu>
-          <button onclick= closeMatchDialog()>Annuler</button>
-          <button onclick= saveMatchDialog()>Confirmer</button>
+          <button onclick="closeMatchDialog()">Annuler</button>
+          <button onclick="saveMatchDialog()">Confirmer</button>
         </menu>
       </form>
     </dialog>
 
+    <script src="https://cdn.jsdelivr.net/npm/handsontable-pro@latest/dist/handsontable.full.min.js"></script>
     <script src="js/html2pdf.bundle.min.js"></script>
     <script src="js/script.js"></script>
 </body>
