@@ -11,6 +11,9 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/handsontable-pro@latest/dist/handsontable.full.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/css-loader.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+
+
 
 </head>
 
@@ -20,9 +23,12 @@
             <button id="tab_Rankings" onclick="showTabRankings()">Classement</button>
             <button id="tab_Matches" onclick="showTabMatches()">Data</button>
         </div>
-        <div id="btn_Data" class="displayNone">
+        <div id="btn_Data" class="displayNone">        
             <button onclick="location.href=location.href">Update Classement</button>
+            <button onclick="showConfig()"><i class="fas fa-cogs"></i></button>
         </div>
+        
+        
     </div>
     <div id="loader" class="loader loader-default is-active" data-text data-blink></div>
     
@@ -127,6 +133,20 @@
         <menu>
           <button onclick="closeMatchDialog()">Annuler</button>
           <button onclick="saveMatchDialog()">Confirmer</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <dialog id="LFPig">
+      <form method="dialog">
+        <section>
+            <table id="ListPig">
+                
+            </table>
+        </section>
+        <menu>
+          <button onclick="closeLFPig()">Annuler</button>
+          <button onclick="saveLFPig()">Sauvegarder</button>
         </menu>
       </form>
     </dialog>

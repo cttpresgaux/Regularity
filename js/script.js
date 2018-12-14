@@ -13,6 +13,7 @@ var LF_Players = [];
 var NumTeam = 0;
 
 var MatchData = {};
+var PigList = {};
 
 // Function
 
@@ -20,7 +21,9 @@ var MatchData = {};
 function FirstInit() {
     //import MatchData
     //if (localStorage.getItem("MatchData") != null) {MatchData = JSON.parse(localStorage.getItem("MatchData"))};
-    importMatchData(importMatches);
+    importMatchData(function () {
+        importPigList(importMatches);
+    });
     //importMatches();
     
 }
@@ -30,7 +33,7 @@ function importMatchData(_Callback) {
 
     req.onreadystatechange = () => {
         if (req.readyState == XMLHttpRequest.DONE) {
-            console.log(req.responseText);
+            //console.log(req.responseText);
             MatchData = JSON.parse(req.responseText)
             _Callback();
         }
@@ -45,7 +48,7 @@ function updateMatchData() {
 
     req.onreadystatechange = () => {
         if (req.readyState == XMLHttpRequest.DONE) {
-            console.log(req.responseText);
+            //console.log(req.responseText);
             
         }
     };
@@ -54,6 +57,41 @@ function updateMatchData() {
     req.setRequestHeader("Content-type", "application/json");
     req.send(JSON.stringify(MatchData));
 }
+
+function importPigList(_Callback) {
+    let req = new XMLHttpRequest();
+
+    req.onreadystatechange = () => {
+        if (req.readyState == XMLHttpRequest.DONE) {
+            //console.log(req.responseText);
+            PigList = JSON.parse(req.responseText)
+            _Callback();
+        }
+    };
+
+    req.open("GET", "https://api.myjson.com/bins/rk1rw", true);
+    req.send();
+}
+
+function updatePigList() {
+    let req = new XMLHttpRequest();
+
+    req.onreadystatechange = () => {
+        if (req.readyState == XMLHttpRequest.DONE) {
+            //console.log(req.responseText);
+            
+        }
+    };
+
+    req.open("PUT", "https://api.myjson.com/bins/rk1rw", true);
+    req.setRequestHeader("Content-type", "application/json");
+    req.send(JSON.stringify(PigList));
+}
+
+
+
+
+
 
 function Init() {
     for (var i = 1; i < Week.length; i++) {
@@ -164,19 +202,17 @@ function createSpreadSheet() {
 
     var container = document.getElementById('SpreadSheet');
     var hot = new Handsontable(container, {
-        data: LF_Players,
+        data: arraySorting(LF_Players),
         columnSorting: {
             sortEmptyCells: true,
             initialConfig: {
-              column: 12,
+              column: 10,
               sortOrder: 'desc'
             }
         },
         rowHeaders: true,
         colHeaders: [
             "LF",
-            "Index",
-            "UniqueID",
             "FirstName",
             "LastName",
             "Class.",
@@ -267,6 +303,14 @@ function showMatchDialog(event) {
     document.getElementById("MatchesDetails").showModal();
 }
 
+function showConfig() {
+    document.getElementById("LFPig").showModal();
+}
+
+
+
+// Dialogs Functions
+
 function closeMatchDialog() {
     document.getElementById('MatchesDetails').close();
 }
@@ -289,6 +333,26 @@ function saveMatchDialog() {
     document.getElementById(m_id).className = "MatchButton GreenButton"
 
     document.getElementById('MatchesDetails').close();
+}
+
+function closeLFPig() {
+    document.getElementById('LFPig').close();
+}
+
+function saveLFPig() {
+    updatePigList();
+
+    document.getElementById('LFPig').close();
+
+    //location.reload();
+}
+
+function cbChange(event) {
+  console.log(event);
+  // Get the checkbox
+  var checkBox = document.getElementById(event.target.id);
+  var n = event.target.id.replace("cb_", "");
+  PigList[n] = checkBox.checked;
 }
 
 //Function HTML Dynamic
@@ -674,7 +738,26 @@ function setLF(resp, callback) {
         LF_Players[Position - 1] = player;
         LF_UniqueID[UniqueIndex] = Position - 1;
 
+        var div = document.createElement("tr");
+        var th1 = document.createElement("th");
+        th1.innerText = FirstName + " " + LastName
+        div.appendChild(th1);
+        var cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.id = "cb_" + UniqueIndex;
+        cb.addEventListener("change", cbChange);
+        if (PigList[UniqueIndex] != null) {
+            cb.checked = PigList[UniqueIndex];
+        } else {
+            PigList[UniqueIndex] = false;
+            cb.checked = false;
+        }
+        var th2 = document.createElement("th");
+        th2.appendChild(cb)
+        
+        div.appendChild(th2);
 
+        document.getElementById("ListPig").appendChild(div);
     }
 
     callback()
@@ -693,4 +776,56 @@ function showTabMatches() {
     document.getElementById("Matches").className = "";
     document.getElementById("btn_Data").className = "";
     document.getElementById("Rankings").className = "displayNone";
+}
+
+
+// Edit Array
+function arraySorting(array) {
+    //console.log(array);
+
+    var newArray = new Array();
+
+    for (var i = 0; i < array.length; i++) {
+        if (array[i].VictoryPercent != "-") {
+            var pig = "-";
+            var b = PigList[array[i].UniqueIndex];
+            if ( b != true) {pig = array[i].Pig; }
+            var p = {
+            "Position": array[i].Position,
+            "FirstName": array[i].FirstName,
+            "LastName": array[i].LastName,
+            "Ranking": array[i].Ranking,
+            "MatchPlayed": array[i].MatchPlayed,
+            "Victory": array[i].Victory,
+            "Defait": array[i].Defait,
+            "VictoryPercent": array[i].VictoryPercent,
+            "Counter": array[i].Counter,
+            "Perf": array[i].Perf,
+            "Points": array[i].Points,
+            "AveragePoints":array[i].AveragePoints,
+            "Pig": pig
+            };
+            newArray.push(p);
+        }
+    }
+
+    newArray.sort(compare);
+
+    return newArray;
+}
+
+function compare(a,b) {
+  if (a.Points < b.Points)
+    return 1;
+  if (a.Points > b.Points)
+    return -1;
+  if (a.AveragePoints < b.AveragePoints)
+    return 1;
+  if (a.AveragePoints > b.AveragePoints)
+    return -1;
+  if (a.MatchPlayed < b.MatchPlayed)
+    return 1;
+  if (a.MatchPlayed > b.MatchPlayed)
+    return -1;
+  return 0;
 }
