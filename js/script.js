@@ -163,38 +163,38 @@ function addResultToLF(match) {
             var id = playersArray[i].UniqueIndex;
             var p = LF_Players[LF_UniqueID[id]];
 
+            if(playersArray[i].victory != "WO"){
+                p.MatchPlayed = parseInt(p.MatchPlayed);
+                p.Victory = parseInt(p.Victory);
+                p.Defait = parseInt(p.Defait);
+                p.Counter = parseInt(p.Counter);
+                p.Perf = parseInt(p.Perf);
+                p.Points = parseInt(p.Points);
+                p.Pig = parseInt(p.Pig);
 
-            p.MatchPlayed = parseInt(p.MatchPlayed);
-            p.Victory = parseInt(p.Victory);
-            p.Defait = parseInt(p.Defait);
-            p.Counter = parseInt(p.Counter);
-            p.Perf = parseInt(p.Perf);
-            p.Points = parseInt(p.Points);
-            p.Pig = parseInt(p.Pig);
 
+                p.MatchPlayed++;
+                p.Victory += playersArray[i].won.length;
+                p.Defait += playersArray[i].lost.length;
+                p.VictoryPercent = ((p.Victory / (p.Victory + p.Defait))*100).toFixed(2);
 
-            p.MatchPlayed++;
-            p.Victory += playersArray[i].won.length;
-            p.Defait += playersArray[i].lost.length;
-            p.VictoryPercent = ((p.Victory / (p.Victory + p.Defait))*100).toFixed(2);
-
-            var prv = rankingValue.indexOf(p.Ranking);
-            for (var j = 0; j < playersArray[i].lost.length; j++) {
-                var arv = rankingValue.indexOf(playersArray[i].lost[j]);
-                if (prv > arv) {
-                    p.Counter++;
-                    p.Pig += (prv-arv);
+                var prv = rankingValue.indexOf(p.Ranking);
+                for (var j = 0; j < playersArray[i].lost.length; j++) {
+                    var arv = rankingValue.indexOf(playersArray[i].lost[j]);
+                    if (prv > arv) {
+                        p.Counter++;
+                        p.Pig += (prv-arv);
+                    }
                 }
-            }
-             
-            for (var j = 0; j < playersArray[i].won.length; j++) {
-                var arv = rankingValue.indexOf(playersArray[i].won[j]);
-                if (prv < arv) {p.Perf++;}
-                p.Points += calculPtsReg(prv,arv);
-            }
 
-            p.AveragePoints = (p.Points / p.MatchPlayed).toFixed(2);
+                for (var j = 0; j < playersArray[i].won.length; j++) {
+                    var arv = rankingValue.indexOf(playersArray[i].won[j]);
+                    if (prv < arv) {p.Perf++;}
+                    p.Points += calculPtsReg(prv,arv);
+                }
 
+                p.AveragePoints = (p.Points / p.MatchPlayed).toFixed(2);
+            }
             
         }
 
