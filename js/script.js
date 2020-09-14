@@ -40,7 +40,7 @@ function importMatchData(_Callback) {
         }
     };
 
-    req.open("GET", "https://api.jsonbin.io/b/5bec6d2398c67b2d3c4fb8c7", true);
+    req.open("GET", "https://api.jsonbin.io/b/5bec6d2398c67b2d3c4fb8c7/latest", true);
     req.setRequestHeader("secret-key", "$2a$10$YQAbuQ3sWviKndR5bSm73.DgZ6KEYbqMeTZerwI1MSs1Tio0MYE4C");
     req.send();
 }
@@ -76,7 +76,7 @@ function importPigList(_Callback) {
         }
     };
 
-    req.open("GET", "https://api.jsonbin.io/b/5f5ff54c302a837e95665c71", true);
+    req.open("GET", "https://api.jsonbin.io/b/5f5ff54c302a837e95665c71/latest", true);
     req.setRequestHeader("secret-key", "$2a$10$YQAbuQ3sWviKndR5bSm73.DgZ6KEYbqMeTZerwI1MSs1Tio0MYE4C");
     req.send();
 }
