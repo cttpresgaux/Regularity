@@ -21,10 +21,10 @@ var PigList = {};
 function FirstInit() {
     //import MatchData
     //if (localStorage.getItem("MatchData") != null) {MatchData = JSON.parse(localStorage.getItem("MatchData"))};
-    importMatchData(function () {
-        importPigList(importMatches);
-    });
-    //importMatches();
+    //importMatchData(function () {
+    //    importPigList(importMatches);
+    //});
+    importMatches();
     
 }
 
