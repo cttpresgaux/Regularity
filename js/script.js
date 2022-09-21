@@ -35,8 +35,8 @@ function importMatchData(_Callback) {
 
     req.onreadystatechange = () => {
         if (req.readyState == XMLHttpRequest.DONE) {
-            console.log("---importMatchData---");
-            console.log(req.responseText);
+            //console.log("---importMatchData---");
+            //console.log(req.responseText);
             MatchData = JSON.parse(req.responseText)
             _Callback();
         }
@@ -57,8 +57,8 @@ function updateMatchData() {
         }
     };
     
-    console.log("---updateMatchData---");
-    console.log(MatchData);
+    //console.log("---updateMatchData---");
+    //console.log(MatchData);
     
     req.open("PUT", "https://api.jsonbin.io/b/5bec6d2398c67b2d3c4fb8c7", true);
     req.setRequestHeader("secret-key", "$2a$10$YQAbuQ3sWviKndR5bSm73.DgZ6KEYbqMeTZerwI1MSs1Tio0MYE4C");
@@ -71,8 +71,8 @@ function importPigList(_Callback) {
 
     req.onreadystatechange = () => {
         if (req.readyState == XMLHttpRequest.DONE) {
-            console.log("---importPigList---");
-            console.log(req.responseText);
+            //console.log("---importPigList---");
+            //console.log(req.responseText);
             PigList = JSON.parse(req.responseText)
             _Callback();
         }
@@ -93,8 +93,8 @@ function updatePigList() {
         }
     };
 
-    console.log("---updatePigList---");
-    console.log(PigList);
+    //console.log("---updatePigList---");
+    //console.log(PigList);
     
     req.open("PUT", "https://api.jsonbin.io/b/5f5ff54c302a837e95665c71", true);
     req.setRequestHeader("secret-key", "$2a$10$YQAbuQ3sWviKndR5bSm73.DgZ6KEYbqMeTZerwI1MSs1Tio0MYE4C");
@@ -363,7 +363,7 @@ function saveLFPig() {
 }
 
 function cbChange(event) {
-  console.log(event);
+  //console.log(event);
   // Get the checkbox
   var checkBox = document.getElementById(event.target.id);
   var n = event.target.id.replace("cb_", "");
@@ -656,8 +656,8 @@ function setMatches(resp, callback) {
 
             //ajout resultat individuel
             for (var i4 = 1; i4 < Matchs.length; i4++) {
-                console.log(NumberOfTeam + " - " + week);
-                console.log(NumTeam);
+                //console.log(NumberOfTeam + " - " + week);
+                //console.log(NumTeam);
                 var m = Matchs[i4];
                 if (m != undefined && !m.wo) {
                     if (m.homeWon) {
