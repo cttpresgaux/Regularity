@@ -21,10 +21,12 @@ var PigList = {};
 function FirstInit() {
     //import MatchData
     //if (localStorage.getItem("MatchData") != null) {MatchData = JSON.parse(localStorage.getItem("MatchData"))};
-    importMatchData(function () {
-        importPigList(importMatches);
-    });
-    //importMatches();
+
+    //importMatchData(function () {
+    //    importPigList(importMatches);
+    //});
+
+    importMatches();
     
 }
 
@@ -115,6 +117,7 @@ function Init() {
         t.innerText = "Semaine " + i
         w.appendChild(t);
 
+        
         for (var i2 = 0; i2 < NumTeam; i2++) {
             var m = Week[i][letters[i2]];
             var b = document.createElement("Button");
@@ -523,6 +526,7 @@ function setMatches(resp, callback) {
 
     var LastTeamLetter = "";
     var NumberOfTeam = 0;
+    
 
     for (i = 1; i < matches.length; i++) {
 
@@ -611,6 +615,15 @@ function setMatches(resp, callback) {
         //Match Details
         var HPs = [];
         var APs = [];
+        //Fix Unknow Player
+        HPs = [null,null,null,null,null];
+        APs = [null,null,null,null,null];
+        for (var ukIndex = 1; ukIndex < 5; ukIndex++) {
+            HPs[ukIndex] = {UniqueIndex: 00000,position: 0,name: "????" + "   " + "." + ".",ranking: "??",victory: 0,won: [],lost: []};
+            APs[ukIndex] = {UniqueIndex: 00000,position: 0,name: "????" + "   " + "." + ".",ranking: "??",victory: 0,won: [],lost: []};
+        }
+
+
         var Matchs = [];
 
         if (MatchDetails[0].innerHTML == 'true') {
@@ -643,12 +656,15 @@ function setMatches(resp, callback) {
 
             //ajout resultat individuel
             for (var i4 = 1; i4 < Matchs.length; i4++) {
+                console.log(NumberOfTeam + " - " + week);
+                console.log(NumTeam);
                 var m = Matchs[i4];
                 if (m != undefined && !m.wo) {
                     if (m.homeWon) {
                         HPs[m.hpi].won.push(APs[m.api].ranking);
                         APs[m.api].lost.push(HPs[m.hpi].ranking);
                     } else {
+                        //console.log(HPs[m.hpi]);
                         HPs[m.hpi].lost.push(APs[m.api].ranking);
                         APs[m.api].won.push(HPs[m.hpi].ranking);
                     }
@@ -679,7 +695,8 @@ function setMatches(resp, callback) {
     }
 
     NumTeam = NumberOfTeam;
-    callback()
+    //console.log("test");
+    callback();
 }
 
 
