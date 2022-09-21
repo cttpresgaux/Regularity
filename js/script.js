@@ -619,8 +619,8 @@ function setMatches(resp, callback) {
         HPs = [null,null,null,null,null];
         APs = [null,null,null,null,null];
         for (var ukIndex = 1; ukIndex < 5; ukIndex++) {
-            HPs[ukIndex] = {UniqueIndex: 00000,position: 0,name: "????" + "   " + "." + ".",ranking: "??",victory: 0,won: [],lost: []};
-            APs[ukIndex] = {UniqueIndex: 00000,position: 0,name: "????" + "   " + "." + ".",ranking: "??",victory: 0,won: [],lost: []};
+            HPs[ukIndex] = {UniqueIndex: 00000,position: 0,name: "????" + "   " + "????",ranking: "??",victory: 0,won: [],lost: []};
+            APs[ukIndex] = {UniqueIndex: 00000,position: 0,name: "????" + "   " + "????",ranking: "??",victory: 0,won: [],lost: []};
         }
 
 
